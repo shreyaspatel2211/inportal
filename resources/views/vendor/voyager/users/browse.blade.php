@@ -141,6 +141,7 @@
                                                                     {{ $row->details->options->{$item} . (!$loop->last ? ', ' : '') }}
                                                                 @endif
                                                             @endforeach
+
                                                         @else
                                                             {{ __('voyager::generic.none') }}
                                                         @endif
@@ -251,24 +252,32 @@
                                                     <span>{{ $data->{$row->field} }}</span>
                                                 @endif
                                             </td>
+                                            
                                         @endforeach
+                                        
+                                        
                                         <td class="no-sort no-click bread-actions">
                                             @foreach($actions as $action)
                                                 @if (!method_exists($action, 'massAction'))
                                                     @include('voyager::bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
-                                            @canImpersonate
-                                                <a href="{{ route('impersonate', $data->{$data->getKeyName()}) }}" class="btn btn-sm btn-warning pull-right" style="margin-right:5px; background:#09cd9f;">
-                                                    <i class="voyager-people"></i> <span class="hidden-xs hidden-sm">Impersonate</span>
-                                                </a>
-                                            @endCanImpersonate
+                                            {{-- <form action="{{ route('users.toggle-status', ['id' => $data->id]) }}" method="POST" style="display:inline-block">
+    @csrf
+    <button type="submit"
+        class="btn btn-sm {{ $data->status ? 'btn-danger' : 'btn-success' }}"
+        onclick="return confirm('Are you sure you want to {{ $data->status ? 'deactivate' : 'activate' }} this user?')">
+        <i class="voyager-{{ $data->status ? 'x' : 'check' }}"></i>
+        {{ $data->status ? 'Deactivate' : 'Activate' }}
+    </button>
+</form> --}}
                                         </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+                        
                         @if ($isServerSide)
                             <div class="pull-left">
                                 <div role="status" class="show-res" aria-live="polite">{{ trans_choice(

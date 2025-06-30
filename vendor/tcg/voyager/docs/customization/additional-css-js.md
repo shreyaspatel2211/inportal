@@ -17,4 +17,3 @@ This is all handled via the `voyager.php` config file:
 {% hint style="info" %}
 The path will be passed to Laravels [asset](https://laravel.com/docs/helpers#method-asset) function.
 {% endhint %}
-

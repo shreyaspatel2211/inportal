@@ -51,4 +51,13 @@ class User extends Authenticatable implements UserContract
     {
         return UserFactory::new();
     }
+    public function setPasswordAttribute($value)
+    {
+    if (!empty($value)) {
+        $this->attributes['password'] = bcrypt($value);
+    } elseif (isset($this->attributes['password'])) {
+            // Keep existing password
+        $this->attributes['password'] = $this->getOriginal('password');
+    }
+    }
 }

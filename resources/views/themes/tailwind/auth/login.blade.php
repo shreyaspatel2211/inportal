@@ -1,6 +1,19 @@
 @extends('theme::layouts.app')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
 @section('content')
+
+@if (session('success'))
+    <div class="bg-green-500 text-white p-4 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="bg-red-500 text-white p-4 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
 
     <div class="flex flex-col justify-center py-20 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
@@ -91,3 +104,6 @@
     </div>
 
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

@@ -43,6 +43,7 @@ class AuthenticatesUsersTest extends TestCase
             'HTTP_ACCEPT' => 'application/json',
         ]);
 
+
         $response = $this->handleRequestUsing($request, function ($request) {
             return $this->login($request);
         })->assertStatus(204);

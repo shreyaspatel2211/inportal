@@ -1,3 +1,94 @@
-.voyager .navbar.navbar-default .navbar-header .navbar-brand, .voyager .navbar .navbar-header .navbar-brand{
-    background: #046afe;
+.voyager .navbar.navbar-default .navbar-header .navbar-brand, .voyager .navbar .navbar-header .navbar-brand {
+    background: #23a595;
+}
+
+
+
+.voyager .side-menu.sidebar-inverse {
+    background: #ffffff !important;
+    background: linear-gradient(45deg, #353d47, #21292e);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#353d47", endColorstr="#21292e", GradientType=1);
+    overflow-x: hidden;
+    transition: width .5s cubic-bezier(.19, 1, .22, 1)
+}
+
+.voyager .side-menu.sidebar-inverse .navbar li>a {
+    color: #000000;
+
+}
+
+.voyager .side-menu .navbar-header {
+    background-color: #23a595;
+    margin-bottom: 4px;
+}
+
+.voyager .side-menu.sidebar-inverse .navbar li.active>a {
+    background-color: #f2f2f2;
+    border-left: 3px solid #23a595;
+    border-right: 0 solid #23a595;
+    color: #23a595;
+    font-weight: 400
+}
+
+
+.voyager .side-menu.sidebar-inverse .navbar li>a:hover {
+    background: #23a595;
+    color: #ffffff
+}
+
+.breadcrumb li:last-child {
+    color: #000000;
+    cursor: pointer;
+    font-weight: 400
+}
+
+.btn.btn-primary {
+    background: #23a595;
+    border: 0;
+    border-radius: 3px;
+    color: #fff;
+    opacity: .9
+}
+
+.expanded .side-menu .panel.widget .dimmer, .side-menu:hover .panel.widget .dimmer {
+    background: linear-gradient(275deg, #ffffff 0, rgba(255, 255, 255, 0.95) 34%, rgba(255, 255, 255, 0.7) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1)
+}
+
+.table {
+    color: #000000;
+    font-size: 17px;
+}
+
+p {
+    color: #000000;
+}
+
+.form-control {
+    color: #000000;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #e4eaec;
+}
+
+.panel-body {
+    padding: 15px;
+    color: #000000;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #000000;
+    line-height: 28px
+}
+
+.btn-default {
+    color: #ffffff;
+    background-color: #5a5a5a;
+    border-color: #ccc
+}
+
+button, input, optgroup, select, textarea {
+    color: #000000;
+    font: inherit;
+    margin: 0
 }

@@ -1,0 +1,7 @@
+.voyager .side-menu.sidebar-inverse {
+    background: #ffffff !important;
+    background: linear-gradient(45deg, #eff1f3 0, #2edf02 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#353d47', endColorstr='#21292e', GradientType=1);
+    overflow-x: hidden;
+    transition: width .5s cubic-bezier(.19, 1, .22, 1)
+}

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Facades\Voyager;
+use App\Models\User;
 
 class VoyagerAuthController extends Controller
 {
@@ -23,6 +24,15 @@ class VoyagerAuthController extends Controller
     public function postLogin(Request $request)
     {
         $this->validateLogin($request);
+
+        $user = User::where('email', $request->email)->first();
+        // Check user status
+        // if ($user->status !== 'Approved') {
+        //     Auth::logout();
+        //     return redirect()->back()->withErrors([
+        //         'email' => 'Your profile is not approved yet.',
+        //     ])->withInput($request->only($this->username()));
+        // }
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and

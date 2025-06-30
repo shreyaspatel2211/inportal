@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -27,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -43,7 +44,6 @@ class LoginController extends Controller
         if(setting('auth.email_or_username')){
             return setting('auth.email_or_username');
         }
-
         return 'email';
     }
 
@@ -68,17 +68,22 @@ class LoginController extends Controller
      */
     protected function sendLoginResponse(Request $request)
     {
+        $user = User::where('email', $request->email)->first();
+        // dd($user);
+        // if ($user->status !== 'Approved') {
+        //     Auth::logout();
+        //     return redirect()->back()->withErrors([
+        //         'email' => 'Your profile is not approved yet.',
+        //     ])->withInput($request->only($this->username()));
+        // }
         $request->session()->regenerate();
-
         $this->clearLoginAttempts($request);
-
         return $this->authenticated($request, $this->guard()->user())
                 ?: redirect()->intended($this->redirectPath())->with(['message' => 'Successfully logged in.', 'message_type' => 'success']);
     }
 
-
     public function logout(){
         Auth::logout();
-        return redirect(route('wave.home'));
+        return redirect(route('HomePage'));
     }
 }
