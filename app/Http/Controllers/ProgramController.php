@@ -61,48 +61,49 @@ class ProgramController extends Controller
     }
 
     public function submitApplication(Request $request, Programs $program)
-{
-    $form = Form::find($program->form_id);
-    $userId = Auth::id();
+    {
+        $form = Form::find($program->form_id);
+        $userId = Auth::id();
 
-    if (!$form || !$form->custom_field) {
-        return back()->with('error', 'Form not found.');
-    }
-
-    $customFields = json_decode($form->custom_field, true);
-    $data = [];
-    $imagePath = null;
-    $filePath = null;
-
-    foreach ($customFields as $key => $field) {
-        $type = strtolower($field['field_type']);
-
-        if ($type === 'image' && $request->hasFile($key)) {
-            $folder = 'program_members/' . date('FY');
-            $filename = Str::random(20) . '.' . $request->file($key)->getClientOriginalExtension();
-
-            $image = $request->file($key);
-            $imagePath = $image->storeAs($folder, $filename, 'public');
-            continue;
+        if (!$form || !$form->custom_field) {
+            return back()->with('error', 'Form not found.');
         }
 
-        if ($type === 'file' && $request->hasFile($key)) {
-            $file = $request->file($key);
-            $filePath = $file->store('uploads/files', 'public');
-            continue;
+        $customFields = json_decode($form->custom_field, true);
+        
+        $data = [];
+        $imagePath = null;
+        $filePath = null;
+
+        foreach ($customFields as $key => $field) {
+            $type = strtolower($field['field_type']);
+
+            if ($type === 'image' && $request->hasFile($key)) {
+                $folder = 'program_members/' . date('FY');
+                $filename = Str::random(20) . '.' . $request->file($key)->getClientOriginalExtension();
+
+                $image = $request->file($key);
+                $imagePath = $image->storeAs($folder, $filename, 'public');
+                continue;
+            }
+
+            if ($type === 'file' && $request->hasFile($key)) {
+                $file = $request->file($key);
+                $filePath = $file->store('uploads/files', 'public');
+                continue;
+            }
+
+            $data[$key] = $request->input($key);
         }
 
-        $data[$key] = $request->input($key);
+        ProgramMembers::create([
+            'program_id' => $program->id,
+            'member_data' => json_encode($data),
+            'image' => $imagePath,
+            'file' => $filePath,
+            'user_id' => $userId,
+        ]);
+
+        return redirect()->back()->with('success', 'Application submitted!');
     }
-
-    ProgramMembers::create([
-        'program_id' => $program->id,
-        'member_data' => json_encode($data),
-        'image' => $imagePath,
-        'file' => $filePath,
-        'user_id' => $userId,
-    ]);
-
-    return redirect()->back()->with('success', 'Application submitted!');
-}
 }

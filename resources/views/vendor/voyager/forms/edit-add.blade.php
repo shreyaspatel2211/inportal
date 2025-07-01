@@ -79,6 +79,7 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <input type="text" class="form-control" name="field_name[]" placeholder="Field Name" />
+                                        <p class="text-danger">**Do Not Use Space in Field Name.</p>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <select name="required[]" class="form-control">
@@ -88,7 +89,8 @@
                                     </div>
                                     <!-- ✅ New input for options -->
                                     <div class="form-group col-md-3">
-                                        <input type="text" class="form-control field-options-input" name="field_options[]" placeholder="Options (comma separated)" style="display: none;" />
+                                        <input type="text" class="form-control field-options-input" name="field_options[]" placeholder="Yes, No" style="display: none;" />
+                                        <p class="text-danger note" style="display: none;">**Add Your Option Comma(,) Seprated.</p>
                                     </div>
                                 </div>
                             </div>
@@ -277,6 +279,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <input type="text" class="form-control" name="field_name[]" placeholder="Field Name" />
+                        <p class="text-danger">**Do Not Use Space in Field Name.</p>
                     </div>
                     <div class="form-group col-md-2">
                         <select name="required[]" class="form-control">
@@ -286,6 +289,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <input type="text" class="form-control field-options-input" name="field_options[]" placeholder="Options (comma separated)" style="display: none;" />
+                        <p class="text-danger note" style="display: none;">**Add Your Option Comma(,) Seprated.</p>
                     </div>
                 </div>`;
             $('#custom-fields-container').append(newRow);
@@ -295,11 +299,14 @@
         $(document).on('change', '.field-type-select', function () {
             const selectedType = $(this).val();
             const $optionsInput = $(this).closest('.custom-field-row').find('.field-options-input');
+            const $notesInput = $(this).closest('.custom-field-row').find('.note');
 
             if (selectedType === 'check_box' || selectedType === 'radio_button') {
                 $optionsInput.show();
+                $notesInput.show();
             } else {
                 $optionsInput.hide().val('');
+                $notesInput.hide();
             }
         });
 

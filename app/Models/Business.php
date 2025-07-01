@@ -26,15 +26,24 @@ class Business extends Model
         'email',
         'countries',
         'website',
-        'social_media','tagline',
-        'background_image', 
+        'social_media',
+        'tagline',
+        'background_image',
         'logo',
         'description',
         'team_details',
         'traction',
         'fundraising',
         'documents',
-        'impact'
+        'impact',
+        'team_json',
+        'avg_customer',
+        'avg_revenue',
+        'avg_expenditure',
+        'raising_fund',
+        'amount',
+        'type_of_funding',
+        'funding_round',
     ];
     public function teamMember()
     {

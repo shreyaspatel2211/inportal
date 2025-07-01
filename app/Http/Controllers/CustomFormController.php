@@ -24,7 +24,7 @@ class CustomFormController extends VoyagerBaseController
         $count = count($fieldTypes);
 
         for ($i = 0; $i < $count; $i++) {
-            $customField["field_" . ($i + 1)] = [
+            $customField["field_" . $fieldNames[$i]] = [
                 'field_type' => $fieldTypes[$i],
                 'field_name' => $fieldNames[$i],
                 'required'   => $requireds[$i],
