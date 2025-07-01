@@ -29,30 +29,39 @@ class UserRegisterController extends Controller
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|unique:users,email',
-            'country.*' => 'string|max:255', // validates each selected country
+            'country.*' => 'string|max:255',
             'region' => 'required|string|max:255',
             'user_type' => 'required|string|max:255',
         ]);
-        $role_id = 12;
-        if($request->user_type === 'Entrepreneur') {
-            $role_id = 12; 
-        } elseif($request->user_type === 'Investor') {
-            $role_id = 13; 
-        } elseif($request->user_type === 'Mentor') {
-            $role_id = 16; 
-        }
+
+        // Determine role_id based on user_type
+        $role_id = match ($request->user_type) {
+            'Entrepreneur' => 12,
+            'Investor' => 13,
+            'Partner/NGO' => 15,
+            default => 13,
+        };
 
         $defaultPassword = 'trdsy2025';
-        $encryptedPassword = '$2y$10$MVbLhKxElrnq5jOCb5ERue4XAe5D89l2RHmOEYFW3REmk1ncTRh2.';
+
+        $baseUsername = strtolower($validated['first_name']) . strtolower($validated['last_name']);
+        $username = $baseUsername;
+        $counter = 1;
+
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
+
         $user = User::create([
             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
-            'username' => strtolower($validated['first_name']) . '' . strtolower($validated['last_name']), 
+            'username' => $username,
             'phone_number' => $validated['phone'],
             'email' => $validated['email'],
             'country' => $request->country,
             'state' => $validated['region'],
             'user_type' => $validated['user_type'],
-            'password' => $defaultPassword,
+            'password' => $defaultPassword, 
             'role_id' => $role_id,
         ]);
 
@@ -86,9 +95,11 @@ class UserRegisterController extends Controller
                 'user_id' => $user->id
             ]);
         }
-        
+
+    
         Mail::to($user->email)->send(new UserRegistered($user));
 
+        // Prepare phone number and message
         $phone = '+233' . ltrim($validated['phone'], '0');
         $message = "Welcome {$user->name}!\nUsername: {$user->username}\nPhone: {$user->phone_number}\nEmail: {$user->email}\nCountry: {$user->country}\nUser Type: {$user->user_type}\nPassword: trdsy2025";
 
@@ -103,13 +114,9 @@ class UserRegisterController extends Controller
                 'content' => $message,
             ]);
 
-            return redirect()->route('login')->with('success', 'User registered successfully.');
-
-            
             if ($response->successful()) {
                 return redirect()->route('login')->with('success', 'User registered successfully.');
-            } 
-            else {
+            } else {
                 \Log::error('Hubtel SMS Failed:', $response->json());
             }
 
@@ -118,7 +125,5 @@ class UserRegisterController extends Controller
         }
 
         return redirect()->route('login')->with(['message' => 'User Registered Successfully!', 'message_type' => 'success']);
-
-
     }
 }

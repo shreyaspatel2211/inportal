@@ -81,12 +81,22 @@
     }
 </style>
 
-@if(Session::has('success'))
-    <script>
-        toastr.success("{{ Session::get('success') }}");
-    </script>
-@endif
+<!-- Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                toastr.error("{{ $error }}");
+            @endforeach
+        @endif
 
+        @if(Session::has('success'))
+            toastr.success("{{ Session::get('success') }}");
+        @endif
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 @endsection

@@ -124,3 +124,4 @@ Route::get('/form', function () {
 //     ]);
 // })->name('users.toggle-status')->middleware(['web', 'admin.user']);
 
+Route::get('/get-subcategories/{categoryId}', [VentureController::class, 'getSubcategories']);

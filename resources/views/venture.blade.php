@@ -7,10 +7,10 @@
 
     <div>
         <div class="mt-10">
-            <h1 class="pt-5 text-5xl font-bold text-color"> Explore Ventures </h1>
+            <h1 class="pt-5 text-5xl font-bold text-color"> Explore Businesses </h1>
         <a href="{{ route('ventures.create') }}">
         <button class="ml-auto bg-color font-medium text-white mt-3 px-4 py-2 rounded-md hover:bg-black hover:text-white">
-            Add your Venture
+            Add your Business
         </button>
     </a>
     <p class="text-balance mt-6">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae nulla dolorum architecto autem cum accusamus ea explicabo facere possimus,
@@ -20,7 +20,7 @@
     <hr class="bg-color my-5 sm:mt-10" style="height:1.9px;">
 
     <div>
-        <h1 class="text-color text-xl font-bold text-center"> Trending ventures </h1>
+        <h1 class="text-color text-xl font-bold text-center"> Trending Businesses </h1>
         <div class="flex flex-wrap justify-center gap-6 mt-5">
         @php
             $approvedBusinesses = $businesses->where('status', 'Approved');
