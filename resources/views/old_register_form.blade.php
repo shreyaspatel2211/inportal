@@ -65,8 +65,6 @@
         <select class="w-full rounded-md border border-green-500" name="user_type" required>
             <option value="Entrepreneur">Entrepreneur</option>
             <option value="Investor">Investor</option>
-            <option value="Business">Business</option>
-            <option value="Partner/NGO">Partner/NGO</option>
         </select>
 
         {{-- <div class="form-group">

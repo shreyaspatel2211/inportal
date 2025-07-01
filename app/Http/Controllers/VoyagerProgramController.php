@@ -15,10 +15,13 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Country;
 use App\Models\Sectors;
-use App\Models\Business;
+use App\Models\Programs;
+use App\Models\Form;
+use App\Models\ProgramMembers;
 
-class businessVentureController extends VoyagerBaseController
+class VoyagerProgramController extends VoyagerBaseController
 {
+
     public function index(Request $request)
     {
         // GET THE SLUG, ex. 'posts', 'pages', etc.
@@ -54,8 +57,9 @@ class businessVentureController extends VoyagerBaseController
             $model = app($dataType->model_name);
 
             $query = $model::select($dataType->name.'.*');
-            if ($roleId != 1) {
-                $query->where('user_id', $user->id);
+            if ($roleId == 12) {
+                $programIds = ProgramMembers::where('user_id', $user->id)->pluck('program_id')->toArray();
+                $query->whereIn('id', $programIds);
             }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
@@ -195,60 +199,6 @@ class businessVentureController extends VoyagerBaseController
         ));
     }
 
-
-        //***************************************
-    //
-    //                   /\
-    //                  /  \
-    //                 / /\ \
-    //                / ____ \
-    //               /_/    \_\
-    //
-    //
-    // Add a new item of our Data Type BRE(A)D
-    //
-    //****************************************
-
-    public function create(Request $request)
-    {
-        $slug = $this->getSlug($request);
-
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
-        // Check permission
-        $this->authorize('add', app($dataType->model_name));
-
-        $dataTypeContent = (strlen($dataType->model_name) != 0)
-                            ? new $dataType->model_name()
-                            : false;
-
-        foreach ($dataType->addRows as $key => $row) {
-            $dataType->addRows[$key]['col_width'] = $row->details->width ?? 100;
-        }
-
-        // If a column has a relationship associated with it, we do not want to show that field
-        $this->removeRelationshipField($dataType, 'add');
-
-        // Check if BREAD is Translatable
-        $isModelTranslatable = is_bread_translatable($dataTypeContent);
-
-        // Eagerload Relations
-        $this->eagerLoadRelations($dataTypeContent, $dataType, 'add', $isModelTranslatable);
-
-        $view = 'voyager::bread.edit-add';
-
-        if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
-        }
-
-        // return view('custom_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
-
-        $countries = Country::orderBy('nicename')->get();
-        $sectors = Sectors::orderBy('sector_name')->get();
-
-        return Voyager::view('vendor.voyager.businesses.business_admin_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'countries', 'sectors'));
-    }
-
     //***************************************
     //                _____
     //               |  __ \
@@ -310,8 +260,24 @@ class businessVentureController extends VoyagerBaseController
             $view = "voyager::$slug.read";
         }
 
-        $business = Business::where('id', $id)->get();
+        $programs = Programs::where('id', $id)->get();
+        // dd($programs);
+        return Voyager::view('vendor.voyager.programs.program_detail', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'programs'));
+    }
 
-        return Voyager::view('vendor.voyager.businesses.business_detail', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'business'));
+    public function showApplyForm(Programs $program)
+    {
+        // Step 1: Get the form by ID
+        $form = Form::find($program->form_id);
+        
+        // Step 2: Check if form exists and has custom_field
+        if (!$form || !$form->custom_field) {
+            return back()->with('error', 'Form not found or custom fields are empty.');
+        }
+
+        // Step 3: Decode the custom fields
+        $customFields = json_decode($form->custom_field, true);
+        
+        return view('vendor.voyager.programs.apply', compact('program', 'customFields'));
     }
 }

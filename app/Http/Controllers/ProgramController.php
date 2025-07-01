@@ -48,7 +48,7 @@ class ProgramController extends Controller
     {
         // Step 1: Get the form by ID
         $form = Form::find($program->form_id);
-        // dd($form);
+        
         // Step 2: Check if form exists and has custom_field
         if (!$form || !$form->custom_field) {
             return back()->with('error', 'Form not found or custom fields are empty.');

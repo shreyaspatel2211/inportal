@@ -10,18 +10,16 @@ class Mentor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'first_name',
+        'name',
         'gender',
         'date_of_birth',
-        'title',
-        'organization',
+        'about',
+        'benifit',
         'city',
         'country',
-        'personal_introduction',
-        'why_interested',
-        'linked_in',
-        'twitter',
-        'language_preference',
-        'profile_image',
+        'phone_number',
+        'email',
+        'availabel',
+        'image',
     ];
 }

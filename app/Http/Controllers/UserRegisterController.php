@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegistered;
 use Illuminate\Support\Facades\Http;
-
+use App\Models\Entrepreneur;
+use App\Models\Investor;
+use App\Models\Mentor;
 
 class UserRegisterController extends Controller
 {
@@ -31,13 +33,13 @@ class UserRegisterController extends Controller
             'region' => 'required|string|max:255',
             'user_type' => 'required|string|max:255',
         ]);
-        $role_id = 13;
+        $role_id = 12;
         if($request->user_type === 'Entrepreneur') {
             $role_id = 12; 
         } elseif($request->user_type === 'Investor') {
             $role_id = 13; 
-        } elseif($request->user_type === 'Partner/NGO') {
-            $role_id = 15; 
+        } elseif($request->user_type === 'Mentor') {
+            $role_id = 16; 
         }
 
         $defaultPassword = 'trdsy2025';
@@ -53,7 +55,38 @@ class UserRegisterController extends Controller
             'password' => $defaultPassword,
             'role_id' => $role_id,
         ]);
-        // dd($encryptedPassword);
+
+        if($request->user_type === 'Entrepreneur') {
+            $entrepreneur = Entrepreneur::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'], 
+                'phone_number' => $validated['phone'],
+                'email' => $validated['email'],
+                'country' => $request->country,
+                'region' => $validated['region'],
+                'user_id' => $user->id
+            ]);
+        } elseif($request->user_type === 'Investor') {
+            $investor = Investor::create([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'], 
+                'phone_number' => $validated['phone'],
+                'email' => $validated['email'],
+                'country' => $request->country,
+                'region' => $validated['region'],
+                'user_id' => $user->id
+            ]);
+        } elseif($request->user_type === 'Mentor') {
+            $mentor = Mentor::create([
+                'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+                'phone_number' => $validated['phone'],
+                'email' => $validated['email'],
+                'country' => $request->country,
+                'city' => $validated['region'],
+                'user_id' => $user->id
+            ]);
+        }
+        
         Mail::to($user->email)->send(new UserRegistered($user));
 
         $phone = '+233' . ltrim($validated['phone'], '0');

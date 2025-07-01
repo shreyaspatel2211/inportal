@@ -25,7 +25,7 @@ use App\Http\Controllers\UserRegisterController;
 use App\Models\User;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\MentorController;
-
+use App\Http\Controllers\VoyagerProgramController;
 
 // Authentication routes
 Auth::routes();
@@ -73,6 +73,8 @@ Route::get('/ventures', [VentureController::class, 'showForm'])->name('ventures.
 // Define the route to handle form submission with the name `submit.venture`
 Route::post('/ventures', [VentureController::class, 'store'])->name('submit.venture');
 
+Route::post('/admin/businesses/create', [VentureController::class, 'store'])->name('admin.submit.venture');
+
 Route::get('/venture-detail', function () {
     return view('venture_detail');
 });
@@ -101,6 +103,8 @@ Route::get('/program/detail/{id}', [ProgramController::class, 'details'])->name(
 
 Route::get('/programs/{program}/apply', [ProgramController::class, 'showApplyForm'])->name('programss.apply');
 Route::post('/programs/{program}/apply', [ProgramController::class, 'submitApplication'])->name('programs.apply.submit');
+
+Route::get('/admin/programs/{program}/apply', [VoyagerProgramController::class, 'showApplyForm'])->name('admin.programss.apply');
 
 // Route::middleware(['auth'])->group(function () {
 //     Route::post('/programs/{id}/apply', [ProgramController::class, 'applyToProgram'])->name('programs.apply');

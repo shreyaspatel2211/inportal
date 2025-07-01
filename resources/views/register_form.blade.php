@@ -65,8 +65,7 @@
         <select class="mt-1 w-full rounded-md border border-green-500" name="user_type" required>
             <option value="Entrepreneur">Entrepreneur</option>
             <option value="Investor">Investor</option>
-            <option value="Business">Business</option>
-            <option value="Partner/NGO">Partner/NGO</option>
+            <option value="Mentor">Mentor</option>
         </select>
 
         <button type="submit" class="btn btn-primary bg-red-500 text-white font-semibold px-6 py-2 w-full  mt-10 mx-auto flex justify-center rounded transition duration-300">Submit</button>

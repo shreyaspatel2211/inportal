@@ -15,9 +15,11 @@ use TCG\Voyager\Events\BreadDataUpdated;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Country;
 use App\Models\Sectors;
-use App\Models\Business;
+use App\Models\Programs;
+use App\Models\Form;
+use App\Models\ProgramMembers;
 
-class businessVentureController extends VoyagerBaseController
+class VoyagerProgramMemberController extends VoyagerBaseController
 {
     public function index(Request $request)
     {
@@ -54,9 +56,6 @@ class businessVentureController extends VoyagerBaseController
             $model = app($dataType->model_name);
 
             $query = $model::select($dataType->name.'.*');
-            if ($roleId != 1) {
-                $query->where('user_id', $user->id);
-            }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query->{$dataType->scope}();
@@ -193,125 +192,5 @@ class businessVentureController extends VoyagerBaseController
             'showSoftDeleted',
             'showCheckboxColumn'
         ));
-    }
-
-
-        //***************************************
-    //
-    //                   /\
-    //                  /  \
-    //                 / /\ \
-    //                / ____ \
-    //               /_/    \_\
-    //
-    //
-    // Add a new item of our Data Type BRE(A)D
-    //
-    //****************************************
-
-    public function create(Request $request)
-    {
-        $slug = $this->getSlug($request);
-
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
-        // Check permission
-        $this->authorize('add', app($dataType->model_name));
-
-        $dataTypeContent = (strlen($dataType->model_name) != 0)
-                            ? new $dataType->model_name()
-                            : false;
-
-        foreach ($dataType->addRows as $key => $row) {
-            $dataType->addRows[$key]['col_width'] = $row->details->width ?? 100;
-        }
-
-        // If a column has a relationship associated with it, we do not want to show that field
-        $this->removeRelationshipField($dataType, 'add');
-
-        // Check if BREAD is Translatable
-        $isModelTranslatable = is_bread_translatable($dataTypeContent);
-
-        // Eagerload Relations
-        $this->eagerLoadRelations($dataTypeContent, $dataType, 'add', $isModelTranslatable);
-
-        $view = 'voyager::bread.edit-add';
-
-        if (view()->exists("voyager::$slug.edit-add")) {
-            $view = "voyager::$slug.edit-add";
-        }
-
-        // return view('custom_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
-
-        $countries = Country::orderBy('nicename')->get();
-        $sectors = Sectors::orderBy('sector_name')->get();
-
-        return Voyager::view('vendor.voyager.businesses.business_admin_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'countries', 'sectors'));
-    }
-
-    //***************************************
-    //                _____
-    //               |  __ \
-    //               | |__) |
-    //               |  _  /
-    //               | | \ \
-    //               |_|  \_\
-    //
-    //  Read an item of our Data Type B(R)EAD
-    //
-    //****************************************
-
-    public function show(Request $request, $id)
-    {
-        $slug = $this->getSlug($request);
-
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
-
-        $isSoftDeleted = false;
-
-        if (strlen($dataType->model_name) != 0) {
-            $model = app($dataType->model_name);
-            $query = $model->query();
-
-            // Use withTrashed() if model uses SoftDeletes and if toggle is selected
-            if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
-                $query = $query->withTrashed();
-            }
-            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
-                $query = $query->{$dataType->scope}();
-            }
-            $dataTypeContent = call_user_func([$query, 'findOrFail'], $id);
-            if ($dataTypeContent->deleted_at) {
-                $isSoftDeleted = true;
-            }
-        } else {
-            // If Model doest exist, get data from table name
-            $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
-        }
-
-        // Replace relationships' keys for labels and create READ links if a slug is provided.
-        $dataTypeContent = $this->resolveRelations($dataTypeContent, $dataType, true);
-
-        // If a column has a relationship associated with it, we do not want to show that field
-        $this->removeRelationshipField($dataType, 'read');
-
-        // Check permission
-        $this->authorize('read', $dataTypeContent);
-
-        // Check if BREAD is Translatable
-        $isModelTranslatable = is_bread_translatable($dataTypeContent);
-
-        // Eagerload Relations
-        $this->eagerLoadRelations($dataTypeContent, $dataType, 'read', $isModelTranslatable);
-
-        $view = 'voyager::bread.read';
-
-        if (view()->exists("voyager::$slug.read")) {
-            $view = "voyager::$slug.read";
-        }
-
-        $business = Business::where('id', $id)->get();
-
-        return Voyager::view('vendor.voyager.businesses.business_detail', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'business'));
     }
 }

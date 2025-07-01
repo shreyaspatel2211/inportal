@@ -1,20 +1,26 @@
-@extends('theme::layouts.app')
+{{-- @extends('theme::layouts.app') --}}
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+ {{--    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
+@section('content') --}}
+
+@extends('voyager::master')
+<link rel="stylesheet" href="{{ asset('themes/tailwind/css/app.css') }}">
+
+{{-- @section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@stop --}}
+
+{{-- @section('page_title', __('voyager::generic.'.($edit ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular')) --}}
+
+{{-- @section('page_header')
+    <h1 class="page-title">
+        <i class="{{ $dataType->icon }}"></i>
+        {{ __('voyager::generic.'.($edit ? 'edit' : 'add')).' '.$dataType->getTranslatedAttribute('display_name_singular') }}
+    </h1>
+    @include('voyager::multilingual.language-selector')
+@stop --}}
 @section('content')
-
-@if (session('success'))
-    <div class="bg-green-500 text-white p-4 rounded mb-4">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="bg-red-500 text-white p-4 rounded mb-4">
-        {{ session('error') }}
-    </div>
-@endif
 
 <div class="page bg-">
 
@@ -42,7 +48,8 @@
         </div>
 
         <!-- Form -->
-        <form id="wizardForm" action="{{ route('submit.venture') }}" method="POST" enctype="multipart/form-data"> @csrf
+        <form id="wizardForm" action="{{ route('admin.submit.venture') }}" method="POST" enctype="multipart/form-data"> 
+            @csrf
 
             <!-- Step 1 -->
             <div class="step" id="step-1">
@@ -161,7 +168,7 @@
                         </div>
                         <div class="w-full">
                             <label class="text-color text-xl block mt-5">Country</label>
-                            {{-- <input type="text" id="full_address" name="full_address" required class="w-full rounded-md mt-1"> --}}
+                            <input type="text" id="full_address" name="full_address" required class="w-full rounded-md mt-1">
                             <select class="w-full rounded-md mt-1" name="countries[]" required multiple>
                                 <option value="" disabled selected>Select a country</option>
                                 @foreach ($countries as $country)
@@ -417,7 +424,7 @@
         </form>
     </div>
 </div>
-
+@endsection
 
 <!-- JS -->
 <script>
@@ -489,8 +496,130 @@
 </script>
 
 
-@endsection
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section('javascript')
+    <script>
+        var params = {};
+        var $file;
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        function deleteHandler(tag, isMulti) {
+          return function() {
+            $file = $(this).siblings(tag);
+
+            params = {
+                slug:   '{{ $dataType->slug }}',
+                filename:  $file.data('file-name'),
+                id:     $file.data('id'),
+                field:  $file.parent().data('field-name'),
+                multi: isMulti,
+                _token: '{{ csrf_token() }}'
+            }
+
+            $('.confirm_delete_name').text(params.filename);
+            $('#confirm_delete_modal').modal('show');
+          };
+        }
+
+        $('document').ready(function () {
+            $('.toggleswitch').bootstrapToggle();
+
+            //Init datepicker for date fields if data-datepicker attribute defined
+            //or if browser does not handle date inputs
+            $('.form-group input[type=date]').each(function (idx, elt) {
+                if (elt.hasAttribute('data-datepicker')) {
+                    elt.type = 'text';
+                    $(elt).datetimepicker($(elt).data('datepicker'));
+                } else if (elt.type != 'date') {
+                    elt.type = 'text';
+                    $(elt).datetimepicker({
+                        format: 'L',
+                        extraFormats: [ 'YYYY-MM-DD' ]
+                    }).datetimepicker($(elt).data('datepicker'));
+                }
+            });
+
+            @if ($isModelTranslatable)
+                $('.side-body').multilingual({"editing": true});
+            @endif
+
+            $('.side-body input[data-slug-origin]').each(function(i, el) {
+                $(el).slugify();
+            });
+
+            $('.form-group').on('click', '.remove-multi-image', deleteHandler('img', true));
+            $('.form-group').on('click', '.remove-single-image', deleteHandler('img', false));
+            $('.form-group').on('click', '.remove-multi-file', deleteHandler('a', true));
+            $('.form-group').on('click', '.remove-single-file', deleteHandler('a', false));
+
+            $('#confirm_delete').on('click', function(){
+                $.post('{{ route('voyager.'.$dataType->slug.'.media.remove') }}', params, function (response) {
+                    if ( response
+                        && response.data
+                        && response.data.status
+                        && response.data.status == 200 ) {
+
+                        toastr.success(response.data.message);
+                        $file.parent().fadeOut(300, function() { $(this).remove(); })
+                    } else {
+                        toastr.error("Error removing file.");
+                    }
+                });
+
+                $('#confirm_delete_modal').modal('hide');
+            });
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        let fieldCount = 1;
+
+        $('.add-row').on('click', function () {
+            const newRow = `
+                <div class="row custom-field-row mb-2">
+                    <div class="form-group col-md-4">
+                        <select class="form-control field-type-select" name="field_type[]">
+                            <option value="text">Text</option>
+                            <option value="email">Email</option>
+                            <option value="phone_number">Phone Number</option>
+                            <option value="text_area">Text Area</option>
+                            <option value="link">Link</option>
+                            <option value="image">Image</option>
+                            <option value="file">File</option>
+                            <option value="check_box">Check Box</option>
+                            <option value="radio_button">Radio Button</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <input type="text" class="form-control" name="field_name[]" placeholder="Field Name" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select name="required[]" class="form-control">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <input type="text" class="form-control field-options-input" name="field_options[]" placeholder="Options (comma separated)" style="display: none;" />
+                    </div>
+                </div>`;
+            $('#custom-fields-container').append(newRow);
+        });
+
+        // ✅ Show/hide options input when field_type is check_box or radio_button
+        $(document).on('change', '.field-type-select', function () {
+            const selectedType = $(this).val();
+            const $optionsInput = $(this).closest('.custom-field-row').find('.field-options-input');
+
+            if (selectedType === 'check_box' || selectedType === 'radio_button') {
+                $optionsInput.show();
+            } else {
+                $optionsInput.hide().val('');
+            }
+        });
+
+        // ✅ Trigger change on page load in case of edit
+        $(document).ready(function () {
+            $('.field-type-select').trigger('change');
+        });
+
+    </script>
+@stop
