@@ -39,10 +39,10 @@
                 <input class="mt-1 w-full rounded-md border border-green-500" type="text" name="phone" required><br><br>
 
                 <label class="text-green-500 font-semibold">Country:</label>
-                <select class="mt-1 w-full rounded-md border border-green-500" name="country" required>
+                <select class="mt-1 w-full rounded-md border border-green-500" id="country" name="country" required>
                 <option value="" disabled selected>Select a country</option>
                 @foreach ($countries as $country)
-                <option value="{{ $country->nicename }}">{{ $country->nicename }}</option>
+                <option value="{{ $country->iso }}">{{ $country->nicename }}</option>
                 @endforeach
                 </select>
                 <br><br>
@@ -52,11 +52,12 @@
                 <label class="text-green-500 font-semibold">Confirm password:</label>
                 <input class="mt-1 w-full rounded-md border border-green-500" type="password" name="password_confirmation" required><br><br> --}}
 
-                <label class="text-green-500 font-semibold">Region:</label>
-                <select class="mt-1 w-full rounded-md border border-green-500" name="region" required>
-                    <option value="Ahafo">Ahafo</option>
-                    <option value="Ashanti">Ashanti</option>
-                    <option value="Bono">Bono</option>
+                <label class="text-green-500 font-semibold">State:</label>
+                <select class="mt-1 w-full rounded-md border border-green-500" name="region" id="state" required>
+                    <option value="" disabled selected>Select a State</option>
+                @foreach ($states as $state)
+                <option value="{{ $state->name }}">{{ $state->name }}</option>
+                @endforeach
                 </select><br><br>
             </div>
         </div>
@@ -80,6 +81,7 @@
         color: #ffffff;
     }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Toastr JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -96,7 +98,29 @@
         @endif
     });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#country').on('change', function() {
+        var countryId = this.value;
+        $('#state').html('<option value="">Loading...</option>');
+
+        if (countryId) {
+            $.ajax({
+                url: "/get-states/" + countryId,
+                type: "GET",
+                success: function(states) {
+                    $('#state').empty().append('<option value="">-- Select State --</option>');
+                    $.each(states, function(key, state) {
+                        $('#state').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#state').html('<option value="">-- Select State --</option>');
+        }
+    });
+});
+</script>
 
 
 @endsection

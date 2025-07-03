@@ -166,8 +166,7 @@
                                 </div>
                                 <div class="w-full">
                                     <label class="text-color text-xl block mt-5">Pitch</label>
-                                    <input type="file" class="w-full rounded-md mt-1" id="pitch" name="pitch"
-                                        required>
+                                    <input type="file" class="w-full rounded-md mt-1" id="pitch" name="pitch">
 
                                     @if ($errors->has('pitch'))
                                         <span class="text-red-500">{{ $errors->first('pitch') }}</span>
@@ -176,7 +175,7 @@
                                 <br>
                                 <div class="w-full">
                                     <label class="text-color text-xl block">Pitch Video URL </label>
-                                    <input type="url" id="pitch_video_url" name="pitch_video_url" required
+                                    <input type="url" id="pitch_video_url" name="pitch_video_url"
                                         class="w-full rounded-md mt-1">
                                     @if ($errors->has('pitch_video_url'))
                                         <span class="text-red-500">{{ $errors->first('pitch_video_url') }}</span>

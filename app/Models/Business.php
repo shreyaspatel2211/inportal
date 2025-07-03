@@ -44,6 +44,7 @@ class Business extends Model
         'amount',
         'type_of_funding',
         'funding_round',
+        'status',
     ];
     public function teamMember()
     {

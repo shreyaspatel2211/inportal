@@ -13,13 +13,15 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Entrepreneur;
 use App\Models\Investor;
 use App\Models\Mentor;
+use App\Models\State;
 
 class UserRegisterController extends Controller
 {
-    public function showForm()
+     public function showForm()
     {
-            $countries = Country::orderBy('nicename')->get();
-            return view('register_form', compact('countries')); // Use your actual Blade view name
+        $countries = Country::orderBy('nicename')->get();
+        $states = State::orderBy('name')->get();
+        return view('register_form', compact('countries', 'states'));
     }
 
     public function store(Request $request)
@@ -59,7 +61,7 @@ class UserRegisterController extends Controller
             'phone_number' => $validated['phone'],
             'email' => $validated['email'],
             'country' => $request->country,
-            'state' => $validated['region'],
+            'states' => $validated['region'],
             'user_type' => $validated['user_type'],
             'password' => $defaultPassword, 
             'role_id' => $role_id,
@@ -125,5 +127,12 @@ class UserRegisterController extends Controller
         }
 
         return redirect()->route('login')->with(['message' => 'User Registered Successfully!', 'message_type' => 'success']);
+    }
+
+    public function getStates($country_id)
+    {
+        $states = State::where('country_code', $country_id)->orderBy('name')->get();
+
+        return response()->json($states);
     }
 }

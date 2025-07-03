@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Country;
 use App\Models\Sectors;
 use App\Models\Business;
+use App\Models\DocumentSubCategory;
+use App\Models\DocumentCategory;
 
 class businessVentureController extends VoyagerBaseController
 {
@@ -244,9 +246,11 @@ class businessVentureController extends VoyagerBaseController
         // return view('custom_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable'));
 
         $countries = Country::orderBy('nicename')->get();
+        $categories = DocumentCategory::all();
+        $subcategories = DocumentSubCategory::all();
         $sectors = Sectors::orderBy('sector_name')->get();
 
-        return Voyager::view('vendor.voyager.businesses.business_admin_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'countries', 'sectors'));
+        return Voyager::view('vendor.voyager.businesses.business_admin_form', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'countries', 'sectors', 'categories', 'subcategories'));
     }
 
     //***************************************
@@ -313,5 +317,70 @@ class businessVentureController extends VoyagerBaseController
         $business = Business::where('id', $id)->get();
 
         return Voyager::view('vendor.voyager.businesses.business_detail', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'isSoftDeleted', 'business'));
+    }
+
+    //***************************************
+    //                ______
+    //               |  ____|
+    //               | |__
+    //               |  __|
+    //               | |____
+    //               |______|
+    //
+    //  Edit an item of our Data Type BR(E)AD
+    //
+    //****************************************
+
+    public function edit(Request $request, $id)
+    {
+        $slug = $this->getSlug($request);
+
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+
+        if (strlen($dataType->model_name) != 0) {
+            $model = app($dataType->model_name);
+            $query = $model->query();
+
+            // Use withTrashed() if model uses SoftDeletes and if toggle is selected
+            if ($model && in_array(SoftDeletes::class, class_uses_recursive($model))) {
+                $query = $query->withTrashed();
+            }
+            if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
+                $query = $query->{$dataType->scope}();
+            }
+            $dataTypeContent = call_user_func([$query, 'findOrFail'], $id);
+        } else {
+            // If Model doest exist, get data from table name
+            $dataTypeContent = DB::table($dataType->name)->where('id', $id)->first();
+        }
+
+        foreach ($dataType->editRows as $key => $row) {
+            $dataType->editRows[$key]['col_width'] = isset($row->details->width) ? $row->details->width : 100;
+        }
+
+        // If a column has a relationship associated with it, we do not want to show that field
+        $this->removeRelationshipField($dataType, 'edit');
+
+        // Check permission
+        $this->authorize('edit', $dataTypeContent);
+
+        // Check if BREAD is Translatable
+        $isModelTranslatable = is_bread_translatable($dataTypeContent);
+
+        // Eagerload Relations
+        $this->eagerLoadRelations($dataTypeContent, $dataType, 'edit', $isModelTranslatable);
+
+        $view = 'voyager::bread.edit-add';
+
+        if (view()->exists("voyager::$slug.edit-add")) {
+            $view = "voyager::$slug.edit-add";
+        }
+
+        $business = Business::findOrFail($id);
+        $countries = Country::orderBy('nicename')->get();
+        $categories = DocumentCategory::all();
+        $subcategories = DocumentSubCategory::all();
+        $sectors = Sectors::orderBy('sector_name')->get();
+        return Voyager::view('vendor.voyager.businesses.business_edit', compact('dataType', 'dataTypeContent', 'isModelTranslatable', 'business', 'countries', 'sectors', 'subcategories', 'categories'));
     }
 }

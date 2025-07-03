@@ -81,6 +81,25 @@ class LoginController extends Controller
         return $this->authenticated($request, $this->guard()->user())
                 ?: redirect()->intended('/admin')->with(['message' => 'Successfully logged in.', 'message_type' => 'success']);
     }
+    protected function credentials(Request $request)
+    {
+        $login = $request->input('email');
+
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
+
+        return [
+            $field => $login,
+            'password' => $request->input('password'),
+        ];
+    }
+
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    }    
 
     public function logout(){
         Auth::logout();

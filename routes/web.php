@@ -70,6 +70,8 @@ Route::get('/ventures', [VentureController::class, 'create'])->middleware('auth'
 
 Route::get('/ventures', [VentureController::class, 'showForm'])->name('ventures.create');
 
+Route::put('/ventures/{id}', [VentureController::class, 'update'])->name('admin.update.venture');
+
 // Define the route to handle form submission with the name `submit.venture`
 Route::post('/ventures', [VentureController::class, 'store'])->name('submit.venture');
 
@@ -92,10 +94,8 @@ Route::get('/organization', function () {
 // })->name('show.mentor');
 
 Route::get('/mentor', [MentorController::class, 'index'])->name('show.mentor');
+Route::get('/mentors/{id}', [MentorController::class, 'show'])->name('mentors.show');
 
-Route::get('/mentordetail', function () {
-    return view('mentordetail');
-})->name('show.mentordetails');
 
 Route::get('/programs', [ProgramController::class, 'index'])->name('programs.index');
 
@@ -125,3 +125,6 @@ Route::get('/form', function () {
 // })->name('users.toggle-status')->middleware(['web', 'admin.user']);
 
 Route::get('/get-subcategories/{categoryId}', [VentureController::class, 'getSubcategories']);
+
+Route::get('/get-states/{country_id}', [UserRegisterController::class, 'getStates']);
+

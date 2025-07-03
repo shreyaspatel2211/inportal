@@ -24,7 +24,7 @@ class User extends Authenticatable
         'trial_ends_at',
         'phone_number',
         'country',
-        'state',
+        'states',
         'user_type',
         'role_id',
         'sector',

@@ -57,6 +57,28 @@ class VoyagerAuthController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    protected function credentials(Request $request)
+    {
+        $login = $request->input('email');  // Voyager default form uses 'email' field for login input
+
+        // Detect if user entered email or phone number
+        $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
+
+        return [
+            $field => $login,
+            'password' => $request->input('password'),
+        ];
+    }
+
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+    }
+
+
     /*
      * Preempts $redirectTo member variable (from RedirectsUsers trait)
      */

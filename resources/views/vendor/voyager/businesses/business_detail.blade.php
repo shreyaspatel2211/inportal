@@ -1,3 +1,4 @@
+
 @extends('voyager::master')
 <link rel="stylesheet" href="{{ asset('themes/tailwind/css/app.css') }}">
 
@@ -298,23 +299,38 @@
             <!-- Step 5 -->
             <div class="step hidden" id="step-5">
                 @php
+                    $user = \Illuminate\Support\Facades\Auth::user();
+                    $roleId = $user->role_id;
                     $documents = json_decode($business->documents);
                     $categories = collect($documents)->groupBy('category_id');
+                    $hasAccess = false;
+
+                    if($roleId == 13){
+                        // Check if user is assigned to any dealroom related to this business
+                        $hasAccess = \DB::table('dealrooms_users')
+                            ->join('deal_rooms', 'dealrooms_users.deal_room_id', '=', 'deal_rooms.id')
+                            ->where('dealrooms_users.user_id', $user->id)
+                            ->where('deal_rooms.business_id', $business->id)
+                            ->exists();
+                    }
                 @endphp
+                @if($roleId == 13 && $hasAccess)
                 <div class="max-w-4xl mx-auto">
                     @foreach($categories as $categoryId => $categoryDocs)
                         @php
                             $category_details = \App\Models\DocumentCategory::where('id', $categoryId)->first();
-
+                            
                             $categoryName = "Category " . $categoryId; // Replace with real category name from DB if available
                             $subCategories = collect($categoryDocs)->groupBy('sub_category_id');
                         @endphp
 
                         <!-- Category Folder -->
                         <div class="mb-4">
-                            <button type="button" onclick="toggleFolder('cat-{{ $categoryId }}')" class="flex items-center text-xl font-bold text-blue-700">
-                                📁 {{ $category_details->title }}
-                            </button>
+                            @if(isset($category_details->title) && !empty($category_details->title))
+                                <button type="button" onclick="toggleFolder('cat-{{ $categoryId }}')" class="flex items-center text-xl font-bold text-blue-700">
+                                    📁 {{ $category_details->title }}
+                                </button>
+                            @endif
 
                             <div id="cat-{{ $categoryId }}" class="ml-6 mt-2 hidden">
                                 @foreach($subCategories as $subCategoryId => $subCategoryDocs)
@@ -326,18 +342,22 @@
 
                                     <!-- Sub-Category Folder -->
                                     <div class="mb-2">
+                                        @if(isset($sub_category_details->title) && !empty($sub_category_details->title))
                                         <button type="button" onclick="toggleFolder('subcat-{{ $categoryId }}-{{ $subCategoryId }}')" class="flex items-center text-lg text-green-700 mr-5">
                                             📂 {{ $sub_category_details->title }}
                                         </button>
+                                        @endif
 
                                         <div id="subcat-{{ $categoryId }}-{{ $subCategoryId }}" class="ml-6 mt-1 hidden">
                                             @foreach($subCategoryDocs as $doc)
+                                                @if(isset($doc->download_url) && !empty($doc->download_url))
                                                 <div>
                                                     📄 
                                                     <a href="{{ asset($doc->download_url) }}" download class="text-blue-500 underline">
                                                         {{ $doc->document_name }}
                                                     </a>
                                                 </div>
+                                                @endif
                                             @endforeach
                                         </div>
                                     </div>
@@ -346,7 +366,60 @@
                         </div>
                     @endforeach
                 </div>
+                @elseif($roleId == 13)
+                <p class="text-danger text-center" style="color:red;"> Currently, You do not have access the documents.</p>
+                @else<div class="max-w-4xl mx-auto">
+                    @foreach($categories as $categoryId => $categoryDocs)
+                        @php
+                            $category_details = \App\Models\DocumentCategory::where('id', $categoryId)->first();
+                            
+                            $categoryName = "Category " . $categoryId; // Replace with real category name from DB if available
+                            $subCategories = collect($categoryDocs)->groupBy('sub_category_id');
+                        @endphp
 
+                        <!-- Category Folder -->
+                        <div class="mb-4">
+                            @if(isset($category_details->title) && !empty($category_details->title))
+                                <button type="button" onclick="toggleFolder('cat-{{ $categoryId }}')" class="flex items-center text-xl font-bold text-blue-700">
+                                    📁 {{ $category_details->title }}
+                                </button>
+                            @endif
+
+                            <div id="cat-{{ $categoryId }}" class="ml-6 mt-2 hidden">
+                                @foreach($subCategories as $subCategoryId => $subCategoryDocs)
+                                    @php
+                                        $sub_category_details = \App\Models\DocumentSubCategory::where('id', $subCategoryId)->first();
+
+                                        $subCategoryName = "SubCategory " . $subCategoryId; // Replace with real subcategory name from DB if available
+                                    @endphp
+
+                                    <!-- Sub-Category Folder -->
+                                    <div class="mb-2">
+                                        @if(isset($sub_category_details->title) && !empty($sub_category_details->title))
+                                        <button type="button" onclick="toggleFolder('subcat-{{ $categoryId }}-{{ $subCategoryId }}')" class="flex items-center text-lg text-green-700 mr-5">
+                                            📂 {{ $sub_category_details->title }}
+                                        </button>
+                                        @endif
+
+                                        <div id="subcat-{{ $categoryId }}-{{ $subCategoryId }}" class="ml-6 mt-1 hidden">
+                                            @foreach($subCategoryDocs as $doc)
+                                                @if(isset($doc->download_url) && !empty($doc->download_url))
+                                                <div>
+                                                    📄 
+                                                    <a href="{{ asset($doc->download_url) }}" download class="text-blue-500 underline">
+                                                        {{ $doc->document_name }}
+                                                    </a>
+                                                </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                @endif
 
             </div>
 
@@ -356,7 +429,7 @@
                 <div class="max-w-4xl mx-auto sm:flex gap-6 justify-between ">
                     <div>
                         <label class="text-color text-xl block">Impact</label>
-                        <div> {{$business->impact}} </div>
+                        <div> {!!$business->impact!!} </div>
                     </div>
                 </div>
 
@@ -371,6 +444,7 @@
         @endforeach
     </div>
 </div>
+
 
 <!-- JS -->
 <script>

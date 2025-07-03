@@ -21,5 +21,6 @@ class Mentor extends Model
         'email',
         'availabel',
         'image',
+        'user_id'
     ];
 }

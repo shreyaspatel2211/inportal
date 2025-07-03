@@ -48,7 +48,7 @@
                         @else
                             <label for="email" class="block text-sm font-medium leading-5 text-gray-700">Email address</label>
                             <div class="mt-1 rounded-md shadow-sm">
-                                <input id="email" type="email" name="email" required class="w-full form-input" autofocus>
+                                <input id="email" type="text" name="email" required class="w-full form-input" autofocus>
                             </div>
 
                             @if ($errors->has('email'))

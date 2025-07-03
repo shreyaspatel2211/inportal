@@ -18,11 +18,11 @@
 
         @foreach($mentors as $mentor)
         <div class="border-2 rounded-md px-4 py-4 pb-6" style="width:500px;">
-            <img class="rounded-full w-24" src="{{ asset('storage/' . $mentor->image) }}" alt="{{ $mentor->name }}" />
+            <img class="rounded-full w-24" src="{{ asset('storage/' . $mentor->image) }}" />
             <h3 class="mt-6 text-color font-bold text-2xl">{{ $mentor->name }}</h3>
             <p class="mt-1">{{ Str::limit($mentor->designation, 120) }}</p>
 
-            <a href="{{ route('show.mentordetails', $mentor->id) }}">
+            <a href="{{ route('mentors.show', $mentor->id) }}">
                 <button class="ml-auto bg-color font-medium text-white mt-3 px-4 py-2 rounded-md hover:bg-black hover:text-white">
                     View Detail
                 </button>
