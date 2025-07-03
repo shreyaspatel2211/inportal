@@ -120,6 +120,16 @@ class DealroomUsersController extends VoyagerBaseController
                 $businessIds = Business::where('user_id', $user->id)->pluck('id')->toArray();
                 $query->whereIn('business_id', $businessIds);
             }
+            if ($roleId == 13) {
+                // Get deal_room_ids from pivot table where user_id matches logged-in user
+                $allowedDealRoomIds = DB::table('dealrooms_users')
+                    ->where('user_id', $user->id)
+                    ->pluck('deal_room_id')
+                    ->toArray();
+                
+                // Only show deal rooms where ID is in allowed list
+                $query->whereIn('id', $allowedDealRoomIds);
+            }
 
             if ($dataType->scope && $dataType->scope != '' && method_exists($model, 'scope'.ucfirst($dataType->scope))) {
                 $query->{$dataType->scope}();
