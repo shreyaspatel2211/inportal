@@ -70,7 +70,7 @@ Route::get('/ventures', [VentureController::class, 'create'])->middleware('auth'
 
 Route::get('/ventures', [VentureController::class, 'showForm'])->name('ventures.create');
 
-Route::put('/ventures/{id}', [VentureController::class, 'update'])->name('admin.update.venture');
+Route::post('/admin/venture/{id}', [VentureController::class, 'update'])->name('admin.update.venture');
 
 // Define the route to handle form submission with the name `submit.venture`
 Route::post('/ventures', [VentureController::class, 'store'])->name('submit.venture');

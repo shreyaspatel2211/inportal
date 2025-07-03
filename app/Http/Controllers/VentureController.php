@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\Business;
 use App\Models\Sectors;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\TeamMembers;
 use App\Models\DocumentSubCategory;
 use App\Models\DocumentCategory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+
 
 class VentureController extends Controller
 {
@@ -173,12 +175,12 @@ class VentureController extends Controller
         $designations = $request->input('designation');
         $descriptions = $request->input('description');
         $emails = $request->input('team_email');
-        $instagrams = $request->input('team_instagram');
+        // $instagrams = $request->input('team_instagram');
         $facebooks = $request->input('team_facebook');
-        $tiktoks = $request->input('team_tiktok');
+        // $tiktoks = $request->input('team_tiktok');
         $linkedins = $request->input('team_linkedin');
         $twitters = $request->input('team_twitter');
-        $youtubes = $request->input('team_youtube');
+        // $youtubes = $request->input('team_youtube');
 
         $team = [];
 
@@ -189,12 +191,12 @@ class VentureController extends Controller
                 'description' => $descriptions[$i] ?? null,
                 'email' => $emails[$i] ?? null,
                 'socials' => [
-                    'instagram' => $instagrams[$i] ?? null,
+                    // 'instagram' => $instagrams[$i] ?? null,
                     'facebook' => $facebooks[$i] ?? null,
-                    'tiktok' => $tiktoks[$i] ?? null,
+                    // 'tiktok' => $tiktoks[$i] ?? null,
                     'linkedin' => $linkedins[$i] ?? null,
                     'twitter' => $twitters[$i] ?? null,
-                    'youtube' => $youtubes[$i] ?? null,
+                    // 'youtube' => $youtubes[$i] ?? null,
                 ]
             ];
         }
@@ -313,30 +315,79 @@ class VentureController extends Controller
             $business->background_image = $path; 
         }
 
-        if ($request->has('documents')) {
-            $documentData = [];
+        if ($request->filled('documents')) {
+
+            // Current JSON‑encoded docs in DB (or empty array)
+            $existingDocs  = json_decode($business->documents, true) ?? [];
+
+            $documentData  = [];   // the array we will save back
 
             foreach ($request->documents as $index => $doc) {
-                // Check if file is present
-                if (isset($doc['file']) && $doc['file'] instanceof \Illuminate\Http\UploadedFile) {
-                    $file = $doc['file'];
-                    $folder = 'businesses/' . date('FY');
-                    $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
 
-                    $path = $file->storeAs($folder, $filename, 'public');
+                /** --------------------------------------------
+                 *  Look up the existing entry (if there is one)
+                 *  --------------------------------------------*/
+                $existing = $existingDocs[$index] ?? null;
+
+                /** --------------------------------------------
+                 *  1. If user uploaded a NEW file
+                 *  --------------------------------------------*/
+                if (isset($doc['file']) && $doc['file'] instanceof UploadedFile) {
+
+                    // (OPTIONAL) delete the old file to save space
+                    if ($existing && !empty($existing['storage_path'])) {
+                        Storage::disk('public')->delete($existing['storage_path']);
+                    }
+
+                    $file     = $doc['file'];
+                    $folder   = 'businesses/' . date('FY');            // e.g. businesses/July2025
+                    $filename = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                    $path     = $file->storeAs($folder, $filename, 'public');
 
                     $documentData[] = [
-                        'category_id'     => $doc['category'] ?? null,
-                        'sub_category_id' => $doc['sub_category'] ?? null,
-                        'document_name'   => $doc['name'] ?? null,
+                        'category_id'     => $doc['category']      ?? $existing['category_id']     ?? null,
+                        'sub_category_id' => $doc['sub_category']  ?? $existing['sub_category_id'] ?? null,
+                        'document_name'   => $doc['name']          ?? $existing['document_name']   ?? null,
                         'file_name'       => $filename,
                         'storage_path'    => $path,
                         'download_url'    => Storage::url($path),
                         'uploaded_at'     => now()->toDateTimeString(),
                     ];
+
+                    /** --------------------------------------------
+                     *  2. No new file – keep the old one
+                     *  --------------------------------------------*/
+                } elseif ($existing) {
+
+                    // Just update the meta‑data; keep file info unchanged
+                    $documentData[] = [
+                        'category_id'     => $doc['category']      ?? $existing['category_id'],
+                        'sub_category_id' => $doc['sub_category']  ?? $existing['sub_category_id'],
+                        'document_name'   => $doc['name']          ?? $existing['document_name'],
+                        'file_name'       => $existing['file_name'],
+                        'storage_path'    => $existing['storage_path'],
+                        'download_url'    => $existing['download_url'],
+                        'uploaded_at'     => $existing['uploaded_at'],
+                    ];
+
+                    /** --------------------------------------------
+                     *  3. A brand‑new entry without a file yet
+                     *     (Rare, but handled for completeness)
+                     *  --------------------------------------------*/
+                } else {
+                    $documentData[] = [
+                        'category_id'     => $doc['category']     ?? null,
+                        'sub_category_id' => $doc['sub_category'] ?? null,
+                        'document_name'   => $doc['name']         ?? null,
+                        'file_name'       => null,
+                        'storage_path'    => null,
+                        'download_url'    => null,
+                        'uploaded_at'     => now()->toDateTimeString(),
+                    ];
                 }
             }
-            
+
+            // Persist the (possibly modified) list
             $business->documents = json_encode($documentData);
         }
 
@@ -362,12 +413,12 @@ class VentureController extends Controller
         $designations = $request->input('designation');
         $descriptions = $request->input('description');
         $emails = $request->input('team_email');
-        $instagrams = $request->input('team_instagram');
+        // $instagrams = $request->input('team_instagram');
         $facebooks = $request->input('team_facebook');
-        $tiktoks = $request->input('team_tiktok');
+        // $tiktoks = $request->input('team_tiktok');
         $linkedins = $request->input('team_linkedin');
         $twitters = $request->input('team_twitter');
-        $youtubes = $request->input('team_youtube');
+        // $youtubes = $request->input('team_youtube');
         $business->status = $request->status;
 
         $team = [];
@@ -379,26 +430,30 @@ class VentureController extends Controller
                 'description' => $descriptions[$i] ?? null,
                 'email' => $emails[$i] ?? null,
                 'socials' => [
-                    'instagram' => $instagrams[$i] ?? null,
+                    // 'instagram' => $instagrams[$i] ?? null,
                     'facebook' => $facebooks[$i] ?? null,
-                    'tiktok' => $tiktoks[$i] ?? null,
+                    // 'tiktok' => $tiktoks[$i] ?? null,
                     'linkedin' => $linkedins[$i] ?? null,
                     'twitter' => $twitters[$i] ?? null,
-                    'youtube' => $youtubes[$i] ?? null,
+                    // 'youtube' => $youtubes[$i] ?? null,
                 ]
             ];
         }
         // Save in businesses table as JSON
         $business->team_json = json_encode($team);
 
-        $raisingFundValue = $request->input('raising_funds'); // Correct name from form
+        $raisingFundValue = $request->input('raising_funds'); // Will be '1' or '0'
 
-        $business->raising_fund = $raisingFundValue === 'yes' ? 1 : 0;
+        $business->raising_fund = $raisingFundValue; // Just store it directly
 
-        if ($raisingFundValue === 'yes') {
+        if ($raisingFundValue == '1') {
             $business->amount = $request->input('amount');
-            $business->type_of_funding = $request->input('type_of_fundings') ? implode(',', $request->input('type_of_fundings')) : null;
-            $business->funding_round = $request->input('funding_rounds') ? implode(',', $request->input('funding_rounds')) : null;
+            $business->type_of_funding = $request->has('type_of_fundings')
+                ? implode(',', $request->input('type_of_fundings'))
+                : null;
+            $business->funding_round = $request->has('funding_rounds')
+                ? implode(',', $request->input('funding_rounds'))
+                : null;
         } else {
             $business->amount = null;
             $business->type_of_funding = null;

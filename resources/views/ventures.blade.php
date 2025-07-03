@@ -1,20 +1,19 @@
 @extends('theme::layouts.app')
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
 @section('content')
+    @if (session('success'))
+        <div class="bg-green-500 text-white p-4 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
 
-@if (session('success'))
-    <div class="bg-green-500 text-white p-4 rounded mb-4">
-        {{ session('success') }}
-    </div>
-@endif
-
-@if (session('error'))
-    <div class="bg-red-500 text-white p-4 rounded mb-4">
-        {{ session('error') }}
-    </div>
-@endif
+    @if (session('error'))
+        <div class="bg-red-500 text-white p-4 rounded mb-4">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <div class="page bg-">
 
@@ -350,11 +349,11 @@
                             <div class="w-full space-y-4">
                                 <label class="text-color text-xl block">Social Media Links</label>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-instagram text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_instagram[]" placeholder="Instagram Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
 
                                 <div class="flex items-center gap-3">
                                     <i class="fab fa-facebook-f text-xl text-gray-600 w-6"></i>
@@ -362,11 +361,11 @@
                                         class="w-full rounded-md mt-1" required>
                                 </div>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-tiktok text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_tiktok[]" placeholder="TikTok Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="w-full space-y-6 pt-7">
@@ -382,11 +381,11 @@
                                         class="w-full rounded-md mt-1" required>
                                 </div>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-youtube text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_youtube[]" placeholder="YouTube Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -717,48 +716,58 @@
                 });
             });
 
-            let memberCount = 1;
+            document.addEventListener('DOMContentLoaded', function() {
+                let memberIndex = 1;
 
-            document.getElementById('add-member-btn').addEventListener('click', function() {
                 const container = document.getElementById('team-members-container');
+                const addBtn = document.getElementById('add-member-btn');
 
-                const index = container.querySelectorAll('.team-member-group').length + 1;
+                addBtn.addEventListener('click', function() {
+                    memberIndex++;
+                    const memberHtml = `
+                <div class="team-member-group mb-6 border-t border-gray-300 pt-6 relative">
+                    <button type="button" class="remove-member-btn absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-sm">Remove</button>
 
-                const html = `
-                    <div class="team-member-group mb-6 border-t pt-6 mt-6">
-                        <label class="text-color text-xl block">Team Member Name (${index})</label>
-                        <input type="text" name="membername[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block">Team Member Name (${memberIndex})</label>
+                    <input type="text" name="membername[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Member Designation</label>
-                        <input type="text" name="designation[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block mt-4">Member Designation</label>
+                    <input type="text" name="designation[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Member Description</label>
-                        <textarea name="description[]" required class="w-full rounded-md mt-1"></textarea>
+                    <label class="text-color text-xl block mt-4">Member Description</label>
+                    <textarea name="description[]" required class="w-full rounded-md mt-1"></textarea>
 
-                        <label class="text-color text-xl block mt-4">Email</label>
-                        <input type="email" name="team_email[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block mt-4">Email</label>
+                    <input type="email" name="team_email[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Instagram</label>
-                        <input type="url" name="team_instagram[]" required class="w-full rounded-md mt-1">
+                    // <label class="text-color text-xl block mt-4">Instagram</label>
+                    // <input type="url" name="team_instagram[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Facebook</label>
-                        <input type="url" name="team_facebook[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block mt-4">Facebook</label>
+                    <input type="url" name="team_facebook[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">TikTok</label>
-                        <input type="url" name="team_tiktok[]" required class="w-full rounded-md mt-1">
+                    // <label class="text-color text-xl block mt-4">TikTok</label>
+                    // <input type="url" name="team_tiktok[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">LinkedIn</label>
-                        <input type="url" name="team_linkedin[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block mt-4">LinkedIn</label>
+                    <input type="url" name="team_linkedin[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Twitter</label>
-                        <input type="url" name="team_twitter[]" required class="w-full rounded-md mt-1">
+                    <label class="text-color text-xl block mt-4">Twitter</label>
+                    <input type="url" name="team_twitter[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">YouTube</label>
-                        <input type="url" name="team_youtube[]" required class="w-full rounded-md mt-1">
-                    </div>
-                `;
+                    // <label class="text-color text-xl block mt-4">YouTube</label>
+                    // <input type="url" name="team_youtube[]" required class="w-full rounded-md mt-1">
+                </div>
+            `;
+                    container.insertAdjacentHTML('beforeend', memberHtml);
+                });
 
-                container.insertAdjacentHTML('beforeend', html);
+                // Event delegation for remove buttons
+                container.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('remove-member-btn')) {
+                        e.target.closest('.team-member-group').remove();
+                    }
+                });
             });
 
             function toggleFundraisingFields() {
@@ -840,7 +849,7 @@
             });
 
             // Filter subcategories based on selected category
-            $(document).on('change', '.category-select', function () {
+            $(document).on('change', '.category-select', function() {
                 const categoryId = $(this).val();
                 const subcategorySelect = $(this).closest('.document-set').find('.subcategory-select');
 
@@ -852,14 +861,15 @@
                 $.ajax({
                     url: '/get-subcategories/' + categoryId,
                     type: 'GET',
-                    success: function (data) {
+                    success: function(data) {
                         let options = '<option value="">-- Select Sub Category --</option>';
-                        data.forEach(function (subcategory) {
-                            options += `<option value="${subcategory.id}">${subcategory.title}</option>`;
+                        data.forEach(function(subcategory) {
+                            options +=
+                                `<option value="${subcategory.id}">${subcategory.title}</option>`;
                         });
                         subcategorySelect.html(options);
                     },
-                    error: function () {
+                    error: function() {
                         subcategorySelect.html('<option value="">Error loading subcategories</option>');
                     }
                 });

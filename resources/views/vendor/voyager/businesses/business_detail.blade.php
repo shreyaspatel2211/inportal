@@ -210,10 +210,10 @@
                     </div>
 
                     <div class="max-w-4xl mx-auto sm:flex gap-6 justify-between sm:mt-6">
-                        <div class="mt-3 sm:mt-0">
+                        {{-- <div class="mt-3 sm:mt-0">
                             <label class="text-color text-xl block">Instagram</label>
                             <div> {{ $member->socials->instagram }} </div>
-                        </div>
+                        </div> --}}
                         <div class="mt-3 sm:mt-0 text-right">
                             <label class="text-color text-xl block">Facebook</label>
                             <div> {{ $member->socials->facebook }} </div>
@@ -221,10 +221,10 @@
                     </div>
 
                     <div class="max-w-4xl mx-auto sm:flex gap-6 justify-between sm:mt-6">
-                        <div class="mt-3 sm:mt-0">
+                        {{-- <div class="mt-3 sm:mt-0">
                             <label class="text-color text-xl block">Tiktok</label>
                             <div> {{$member->socials->tiktok}} </div>
-                        </div>
+                        </div> --}}
                         <div class="mt-3 sm:mt-0 text-right">
                             <label class="text-color text-xl block">LinkedIn</label>
                             <div> {{$member->socials->linkedin}} </div>
@@ -236,10 +236,10 @@
                             <label class="text-color text-xl block">Twitter</label>
                             <div> {{$member->socials->twitter}} </div>
                         </div>
-                        <div class="mt-3 sm:mt-0 text-right">
+                        {{-- <div class="mt-3 sm:mt-0 text-right">
                             <label class="text-color text-xl block">YouTube</label>
                             <div> {{$member->socials->youtube}} </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <hr>
                 @endforeach

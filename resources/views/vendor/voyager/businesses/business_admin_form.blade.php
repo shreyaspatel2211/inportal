@@ -367,11 +367,11 @@
                             <div class="w-full space-y-4">
                                 <label class="text-color text-xl block">Social Media Links</label>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-instagram text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_instagram[]" placeholder="Instagram Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
 
                                 <div class="flex items-center gap-3">
                                     <i class="fab fa-facebook-f text-xl text-gray-600 w-6"></i>
@@ -379,11 +379,11 @@
                                         class="w-full rounded-md mt-1" required>
                                 </div>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-tiktok text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_tiktok[]" placeholder="TikTok Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
                             </div>
 
                             <div class="w-full space-y-6 pt-7">
@@ -399,11 +399,11 @@
                                         class="w-full rounded-md mt-1" required>
                                 </div>
 
-                                <div class="flex items-center gap-3">
+                                {{-- <div class="flex items-center gap-3">
                                     <i class="fab fa-youtube text-xl text-gray-600 w-6"></i>
                                     <input type="url" name="team_youtube[]" placeholder="YouTube Link"
                                         class="w-full rounded-md mt-1" required>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -755,14 +755,14 @@
                         <label class="text-color text-xl block mt-4">Email</label>
                         <input type="email" name="team_email[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">Instagram</label>
-                        <input type="url" name="team_instagram[]" required class="w-full rounded-md mt-1">
+                        // <label class="text-color text-xl block mt-4">Instagram</label>
+                        // <input type="url" name="team_instagram[]" required class="w-full rounded-md mt-1">
 
                         <label class="text-color text-xl block mt-4">Facebook</label>
                         <input type="url" name="team_facebook[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">TikTok</label>
-                        <input type="url" name="team_tiktok[]" required class="w-full rounded-md mt-1">
+                        // <label class="text-color text-xl block mt-4">TikTok</label>
+                        // <input type="url" name="team_tiktok[]" required class="w-full rounded-md mt-1">
 
                         <label class="text-color text-xl block mt-4">LinkedIn</label>
                         <input type="url" name="team_linkedin[]" required class="w-full rounded-md mt-1">
@@ -770,8 +770,8 @@
                         <label class="text-color text-xl block mt-4">Twitter</label>
                         <input type="url" name="team_twitter[]" required class="w-full rounded-md mt-1">
 
-                        <label class="text-color text-xl block mt-4">YouTube</label>
-                        <input type="url" name="team_youtube[]" required class="w-full rounded-md mt-1">
+                        // <label class="text-color text-xl block mt-4">YouTube</label>
+                        // <input type="url" name="team_youtube[]" required class="w-full rounded-md mt-1">
                     </div>
                 `;
 
