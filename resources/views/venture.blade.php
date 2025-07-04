@@ -13,8 +13,7 @@
             Add your Business
         </button>
     </a>
-    <p class="text-balance mt-6">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae nulla dolorum architecto autem cum accusamus ea explicabo facere possimus,
-                repudiandae illum cumque veniam aperiam odit animi fuga necessitatibus. Autem, voluptatem!</p>
+    <p class="text-balance mt-6">Discover a diverse range of innovative startups and growing enterprises. Whether you're looking to invest, collaborate, or explore business ideas, this platform connects you with ventures shaping the future.</p>
         </div>
     </div>  
     <hr class="bg-color my-5 sm:mt-10" style="height:1.9px;">

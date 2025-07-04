@@ -9,7 +9,7 @@
         <div class="max-w-6xl px-5 mx-auto lg:px-0">
             <div class="pt-20 pb-20">
                 <h1 class="text-center text-white text-5xl font-bold"> Unlocking the next startup <br> opportunity </h1>
-                <p class="text-center text-white text-xl font-light pt-7"> VC4A is the leading platform supporting entrepreneurs, mentors, investors and business <br>
+                <p class="text-center text-white text-xl font-light pt-7"> TradeSync is the leading platform supporting entrepreneurs, mentors, investors and business <br>
                     professionals, strengthening the startup community in Africa, Latin America and beyond. </p>
             </div>
         </div>
@@ -126,7 +126,7 @@
                 <h5 class="mt-2 text-color text-xl font-bold"> Accelerate your business venture </h5>
                 <div class="flex mt-4">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
-                    <p class="ml-3"> Join 27,000+ venture founders around the world who use VC4A to <br> scale their startup. </p>
+                    <p class="ml-3"> Join 27,000+ venture founders around the world who use TradeSync to <br> scale their startup. </p>
                 </div>
                 <div class="flex my-2">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
@@ -153,7 +153,7 @@
                 <h5 class="mt-2 text-color text-xl font-bold"> Accelerate your business venture </h5>
                 <div class="flex mt-4">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
-                    <p class="ml-3"> Join 27,000+ venture founders around the world who use VC4A to <br> scale their startup. </p>
+                    <p class="ml-3"> Join 27,000+ venture founders around the world who use TradeSync to <br> scale their startup. </p>
                 </div>
                 <div class="flex my-2">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
@@ -182,7 +182,7 @@
             <div class="flex flex-wrap gap-6 justify-center text-center pb-20">
                 <div class="mx-auto">
                     <h1 class=" text-white text-3xl font-bold text-center"> 220,000+ </h1>
-                    <p class="text-white text-xl mt-2 text-center"> community members using VC4A </p>
+                    <p class="text-white text-xl mt-2 text-center"> community members using TradeSync </p>
                 </div>
                 <div class="mx-auto">
                     <h1 class=" text-white text-3xl font-bold text-center"> 2,300+ </h1>
@@ -205,7 +205,7 @@
                 <h5 class="mt-2 text-color text-xl font-bold"> Accelerate your business venture </h5>
                 <div class="flex mt-4">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
-                    <p class="ml-3"> Join 27,000+ venture founders around the world who use VC4A to <br> scale their startup. </p>
+                    <p class="ml-3"> Join 27,000+ venture founders around the world who use TradeSync to <br> scale their startup. </p>
                 </div>
                 <div class="flex my-2">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
@@ -233,7 +233,7 @@
                 <h5 class="mt-2 text-color text-xl font-bold"> Accelerate your business venture </h5>
                 <div class="flex mt-4">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />
-                    <p class="ml-3"> Join 27,000+ venture founders around the world who use VC4A to <br> scale their startup. </p>
+                    <p class="ml-3"> Join 27,000+ venture founders around the world who use TradeSync to <br> scale their startup. </p>
                 </div>
                 <div class="flex my-2">
                     <img class="w-4 h-4 mt-1 object-contain" src="{{ asset('themes/tailwind/images/yes.png')}}" alt="" />

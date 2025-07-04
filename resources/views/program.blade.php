@@ -8,8 +8,7 @@
     <div>
         <div class="mt-10">
             <h1 class="pt-5 text-5xl font-bold text-color"> Upcoming Programs </h1>
-            <p class="text-balance mt-6">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Recusandae nulla dolorum architecto autem cum accusamus ea explicabo facere possimus,
-                repudiandae illum cumque veniam aperiam odit animi fuga necessitatibus. Autem, voluptatem!</p>
+            <p class="text-balance mt-6">Stay ahead with our curated business programs designed to accelerate growth, enhance skills, and expand your network. Explore opportunities to learn from industry leaders and collaborate with like-minded entrepreneurs.</p>
         </div>
     </div>
     <hr class="bg-color my-5 sm:mt-10" style="height:1.9px;">

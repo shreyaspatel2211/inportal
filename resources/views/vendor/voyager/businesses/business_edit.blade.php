@@ -744,14 +744,14 @@
                                         'Clean Water and Sanitation',
                                         'Affordable and Clean Energy',
                                         'Decent Work and Economic Growth',
-                                        'Industry, Innovation and Infrastructure',
+                                        'Industry Innovation and Infrastructure',
                                         'Reduced Inequalities',
                                         'Sustainable Cities and Communities',
                                         'Responsible Consumption and Production',
                                         'Climate Action',
                                         'Life Below Water',
                                         'Life on Land',
-                                        'Peace, Justice, and Strong Institutions',
+                                        'Peace Justice and Strong Institutions',
                                         'Partnerships for the Goals',
                                     ];
 
@@ -974,14 +974,8 @@
             <label class="text-color text-xl block mt-4">Email</label>
             <input type="email" name="team_email[]" required class="w-full rounded-md mt-1">
 
-            // <label class="text-color text-xl block mt-4">Instagram</label>
-            // <input type="url" name="team_instagram[]" required class="w-full rounded-md mt-1">
-
             <label class="text-color text-xl block mt-4">Facebook</label>
             <input type="url" name="team_facebook[]" required class="w-full rounded-md mt-1">
-
-            // <label class="text-color text-xl block mt-4">TikTok</label>
-            // <input type="url" name="team_tiktok[]" required class="w-full rounded-md mt-1">
 
             <label class="text-color text-xl block mt-4">LinkedIn</label>
             <input type="url" name="team_linkedin[]" required class="w-full rounded-md mt-1">
@@ -989,8 +983,6 @@
             <label class="text-color text-xl block mt-4">Twitter</label>
             <input type="url" name="team_twitter[]" required class="w-full rounded-md mt-1">
 
-            // <label class="text-color text-xl block mt-4">YouTube</label>
-            // <input type="url" name="team_youtube[]" required class="w-full rounded-md mt-1">
         </div>`;
                 }
 

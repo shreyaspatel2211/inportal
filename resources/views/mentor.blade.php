@@ -6,9 +6,7 @@
 
     <div>
         <h1 class="text-5xl font-bold text-color"> mentor</h1>
-        <p class="text-balance mt-1"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ducimus qui ullam quos non
-            fugiat eius perferendis, doloremque eaque laboriosam consequatur
-            placeat suscipit dolor odio velit, minus molestias? Doloremque, numquam. </p>
+        <p class="text-balance mt-1"> Connect with experienced mentors who are passionate about guiding startups and growing businesses. Our mentors bring industry insights, strategic advice, and real-world experience to help your venture succeed. </p>
     </div>
 
     <hr class="bg-color mt-5 sm:mt-10" style="height:1.9px;">
